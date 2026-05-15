@@ -1,27 +1,25 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
-    </div>
+@extends('layouts.site', ['title' => 'Confirm Password - Career Guidance Portal'])
 
-    <form method="POST" action="{{ route('password.confirm') }}">
-        @csrf
+@section('content')
+    <section class="py-5">
+        <div class="container">
+            <div class="auth-form">
+                <h3><i class="fas fa-shield-alt me-2"></i>Confirm Password</h3>
+                <p class="text-muted small">This is a secure area. Please confirm your password to continue.</p>
 
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
+                <form method="POST" action="{{ route('password.confirm') }}">
+                    @csrf
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input id="password" class="form-control" type="password" name="password" required autocomplete="current-password">
+                    </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <div class="d-grid">
+                        <button class="btn btn-primary-gradient" type="submit">Confirm</button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </section>
+@endsection

@@ -10,6 +10,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $user->profile()->firstOrCreate();
         $latestAttempts = AssessmentAttempt::with('assessment')
             ->where('user_id', $user->id)
             ->latest('submitted_at')

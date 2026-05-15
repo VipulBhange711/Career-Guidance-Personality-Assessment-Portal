@@ -16,8 +16,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $request->user()->profile()->firstOrCreate();
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'profile' => $request->user()->profile,
         ]);
     }
 
@@ -34,7 +37,20 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $profileData = $request->validate([
+            'date_of_birth' => ['nullable', 'date'],
+            'gender' => ['nullable', 'in:male,female,other'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'address' => ['nullable', 'string', 'max:500'],
+            'education_level' => ['nullable', 'string', 'max:50'],
+            'current_education' => ['nullable', 'string', 'max:255'],
+            'interests' => ['nullable', 'string', 'max:1000'],
+            'career_goals' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $request->user()->profile()->updateOrCreate(['user_id' => $request->user()->id], $profileData);
+
+        return Redirect::route('profile.edit')->with('success', 'Profile updated successfully.');
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\CareerController as AdminCareerController;
+use App\Http\Controllers\Admin\QuestionBankController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\DashboardController;
@@ -24,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/assessment/{assessment}', [AssessmentController::class, 'show'])->name('assessment.show');
     Route::post('/assessment/{assessment}/submit', [AssessmentController::class, 'submit'])->name('assessment.submit');
     Route::get('/results/{attempt}', [AssessmentController::class, 'results'])->name('results.show');
+    Route::get('/results/{attempt}/download', [AssessmentController::class, 'download'])->name('results.download');
     Route::get('/results.html', fn () => redirect()->route('dashboard'));
     Route::post('/careers/{career}/save', [CareerController::class, 'save'])->name('careers.save');
 });
@@ -37,6 +40,9 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::redirect('/dashboard.html', '/admin/dashboard');
+
+    Route::resource('careers', AdminCareerController::class)->except(['show']);
+    Route::resource('questions', QuestionBankController::class)->except(['show']);
 });
 
 require __DIR__.'/auth.php';
